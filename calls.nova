@@ -1,0 +1,16 @@
+func sum:
+    inputs a: number, b: number
+    run:
+        return a + b
+
+func greet:
+    inputs name: text
+    run:
+        print("Hola,", name)
+
+func main:
+    run:
+        greet("Nova")
+        let result = sum(2, sum(1, 2))
+        print("Resultado:", result)
+        print("Correcto:", result == 5)

@@ -1,0 +1,4 @@
+func main:
+    run:
+        let result = 2 + 3
+        return result

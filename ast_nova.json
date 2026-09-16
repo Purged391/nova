@@ -1,0 +1,721 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nova-lang.org/schema/ast/v0.1",
+  "title": "Nova AST v0.1",
+  "description": "Abstract Syntax Tree schema for Nova language v0.1",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/Program"
+    },
+    {
+      "$ref": "#/$defs/FuncDecl"
+    },
+    {
+      "$ref": "#/$defs/InputParam"
+    },
+    {
+      "$ref": "#/$defs/TypeRef"
+    },
+    {
+      "$ref": "#/$defs/BlockStmt"
+    },
+    {
+      "$ref": "#/$defs/LetStmt"
+    },
+    {
+      "$ref": "#/$defs/AssignStmt"
+    },
+    {
+      "$ref": "#/$defs/IfStmt"
+    },
+    {
+      "$ref": "#/$defs/ElseIfClause"
+    },
+    {
+      "$ref": "#/$defs/ReturnStmt"
+    },
+    {
+      "$ref": "#/$defs/IdentifierExpr"
+    },
+    {
+      "$ref": "#/$defs/NumberLiteralExpr"
+    },
+    {
+      "$ref": "#/$defs/TextLiteralExpr"
+    },
+    {
+      "$ref": "#/$defs/BoolLiteralExpr"
+    },
+    {
+      "$ref": "#/$defs/BinaryExpr"
+    },
+    {
+      "$ref": "#/$defs/GroupedExpr"
+    },
+    {
+      "$ref": "#/$defs/CallExpr"
+    },
+    {
+      "$ref": "#/$defs/ExprStmt"
+    }
+  ],
+  "$defs": {
+    "SourceSpan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start_line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "start_column": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "end_line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "end_column": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "start_line",
+        "start_column",
+        "end_line",
+        "end_column"
+      ]
+    },
+    "NodeBase": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "source_span": {
+          "$ref": "#/$defs/SourceSpan"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "TypeRef": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "TypeRef"
+            },
+            "name": {
+              "type": "string",
+              "enum": [
+                "number",
+                "text",
+                "bool"
+              ]
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "name"
+          ]
+        }
+      ]
+    },
+    "InputParam": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "InputParam"
+            },
+            "name": {
+              "type": "string",
+              "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+            },
+            "type_name": {
+              "$ref": "#/$defs/TypeRef"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "name",
+            "type_name"
+          ]
+        }
+      ]
+    },
+    "Program": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "Program"
+            },
+            "functions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/FuncDecl"
+              }
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "functions"
+          ]
+        }
+      ]
+    },
+    "FuncDecl": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "FuncDecl"
+            },
+            "name": {
+              "type": "string",
+              "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+            },
+            "inputs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/InputParam"
+              }
+            },
+            "run_block": {
+              "$ref": "#/$defs/BlockStmt"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "name",
+            "inputs",
+            "run_block"
+          ]
+        }
+      ]
+    },
+    "Stmt": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BlockStmt"
+        },
+        {
+          "$ref": "#/$defs/LetStmt"
+        },
+        {
+          "$ref": "#/$defs/AssignStmt"
+        },
+        {
+          "$ref": "#/$defs/IfStmt"
+        },
+        {
+          "$ref": "#/$defs/ReturnStmt"
+        },
+        {
+          "$ref": "#/$defs/ExprStmt"
+        }
+      ]
+    },
+    "Expr": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/IdentifierExpr"
+        },
+        {
+          "$ref": "#/$defs/NumberLiteralExpr"
+        },
+        {
+          "$ref": "#/$defs/TextLiteralExpr"
+        },
+        {
+          "$ref": "#/$defs/BoolLiteralExpr"
+        },
+        {
+          "$ref": "#/$defs/BinaryExpr"
+        },
+        {
+          "$ref": "#/$defs/GroupedExpr"
+        },
+        {
+          "$ref": "#/$defs/CallExpr"
+        }
+      ]
+    },
+    "BlockStmt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "BlockStmt"
+            },
+            "statements": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Stmt"
+              }
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "statements"
+          ]
+        }
+      ]
+    },
+    "LetStmt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "LetStmt"
+            },
+            "name": {
+              "type": "string",
+              "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+            },
+            "declared_type": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/TypeRef"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "value": {
+              "$ref": "#/$defs/Expr"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "name",
+            "declared_type",
+            "value"
+          ]
+        }
+      ]
+    },
+    "AssignStmt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "AssignStmt"
+            },
+            "target": {
+              "$ref": "#/$defs/IdentifierExpr"
+            },
+            "value": {
+              "$ref": "#/$defs/Expr"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "target",
+            "value"
+          ]
+        }
+      ]
+    },
+    "ElseIfClause": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "ElseIfClause"
+            },
+            "condition": {
+              "$ref": "#/$defs/Expr"
+            },
+            "block": {
+              "$ref": "#/$defs/BlockStmt"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "condition",
+            "block"
+          ]
+        }
+      ]
+    },
+    "IfStmt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "IfStmt"
+            },
+            "condition": {
+              "$ref": "#/$defs/Expr"
+            },
+            "then_block": {
+              "$ref": "#/$defs/BlockStmt"
+            },
+            "else_if_clauses": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ElseIfClause"
+              }
+            },
+            "else_block": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/BlockStmt"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "condition",
+            "then_block",
+            "else_if_clauses",
+            "else_block"
+          ]
+        }
+      ]
+    },
+    "ReturnStmt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "ReturnStmt"
+            },
+            "value": {
+              "$ref": "#/$defs/Expr"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "value"
+          ]
+        }
+      ]
+    },
+    "IdentifierExpr": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "IdentifierExpr"
+            },
+            "name": {
+              "type": "string",
+              "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "name"
+          ]
+        }
+      ]
+    },
+    "NumberLiteralExpr": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "NumberLiteralExpr"
+            },
+            "value": {
+              "type": "number"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "value"
+          ]
+        }
+      ]
+    },
+    "TextLiteralExpr": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "TextLiteralExpr"
+            },
+            "value": {
+              "type": "string"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "value"
+          ]
+        }
+      ]
+    },
+    "BoolLiteralExpr": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "BoolLiteralExpr"
+            },
+            "value": {
+              "type": "boolean"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "value"
+          ]
+        }
+      ]
+    },
+    "BinaryExpr": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "BinaryExpr"
+            },
+            "left": {
+              "$ref": "#/$defs/Expr"
+            },
+            "operator": {
+              "type": "string",
+              "enum": [
+                "ADD",
+                "SUB",
+                "MUL",
+                "DIV",
+                "GT",
+                "LT",
+                "EQ"
+              ]
+            },
+            "right": {
+              "$ref": "#/$defs/Expr"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "left",
+            "operator",
+            "right"
+          ]
+        }
+      ]
+    },
+    "GroupedExpr": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "GroupedExpr"
+            },
+            "expression": {
+              "$ref": "#/$defs/Expr"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "expression"
+          ]
+        }
+      ]
+    },
+    "CallExpr": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "CallExpr"
+            },
+            "callee": {
+              "$ref": "#/$defs/IdentifierExpr"
+            },
+            "arguments": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Expr"
+              }
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "callee",
+            "arguments"
+          ]
+        }
+      ]
+    },
+    "ExprStmt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "ExprStmt"
+            },
+            "expression": {
+              "$ref": "#/$defs/CallExpr"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "expression"
+          ]
+        }
+      ]
+    }
+  }
+}
