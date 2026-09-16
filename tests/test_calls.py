@@ -23,8 +23,8 @@ class CallTests(unittest.TestCase):
         self.assertEqual(statement.expression.source_span, ast.SourceSpan(3, 9, 3, 25))
 
     def test_example_cli(self):
-        root = Path(__file__).parent
-        result = subprocess.run([sys.executable, str(root / 'nova.py'), str(root / 'calls.nova')],
+        root = Path(__file__).resolve().parents[1]
+        result = subprocess.run([sys.executable, str(root / 'nova.py'), str(root / 'examples' / 'calls.nova')],
                                 capture_output=True, text=True, timeout=10)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout, 'Hola, Nova\nResultado: 5\nCorrecto: true\n')

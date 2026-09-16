@@ -5,7 +5,7 @@ in `ast_nodes.py`. It does not execute code or check variable and return types.
 All parser-created nodes include one-based, exclusive-end source spans.
 Block spans cover their first through last statements, excluding indentation.
 
-Run `python example_parser.py` to print the AST of the two function examples.
+Run `python -m examples.example_parser` to print the AST of the two function examples.
 Run `python -m unittest discover -v` to run the lexer and parser tests.
 Python 3.10 or later is required. No third-party packages are needed.
 

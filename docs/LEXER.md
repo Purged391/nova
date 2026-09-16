@@ -3,8 +3,8 @@
 The lexer converts source text into tokens. The parser will consume these tokens
 to build the AST; the interpreter will eventually execute that AST.
 
-Run the example with `python example_lexer.py` and the tests with
-`python -m unittest discover -v` from this directory. Python 3.10+ is required.
+Run the example with `python -m examples.example_lexer` and the tests with
+`python -m unittest discover -v` from the project root. Python 3.10+ is required.
 
 Each token stores its kind, original spelling (`lexeme`), decoded literal value,
 and source span. Lines and columns start at 1; end positions are exclusive.

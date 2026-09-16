@@ -3,7 +3,7 @@
 import unittest
 
 import ast_nodes as ast
-from example_parser import SOURCE
+from examples.example_parser import SOURCE
 from lexer import Lexer
 from parser import Parser, ParseError, parse
 

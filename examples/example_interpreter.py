@@ -1,6 +1,6 @@
 """Execute Nova functions through the lexer, parser, and interpreter."""
 
-from example_parser import SOURCE
+from examples.example_parser import SOURCE
 from interpreter import Interpreter
 from parser import parse
 

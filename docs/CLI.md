@@ -1,9 +1,9 @@
 # Running Nova files
 
-Save your code in a UTF-8 `.nova` file, then run it from the project directory:
+Save your code in a UTF-8 `.nova` file, then run it from the project root:
 
 ```shell
-python nova.py hello.nova
+python nova.py examples/hello.nova
 ```
 
 Expected output:

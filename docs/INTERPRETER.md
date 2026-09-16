@@ -19,7 +19,7 @@ result = runtime.call("sum", 2, 3)  # 5
 result = run(source, "sum", 2, 3)   # Equivalent one-shot execution
 ```
 
-Run `python example_interpreter.py` for the sum and greeting examples.
+Run `python -m examples.example_interpreter` for the sum and greeting examples.
 Run `python -m unittest discover -v` for all tests. Requires Python 3.10+;
 no third-party packages are needed.
 
@@ -79,4 +79,4 @@ their conditions may call functions. There is no iteration limit; the body
 must eventually make the condition false unless the function returns.
 `break`, `continue`, and `while ... else` are not supported yet.
 
-Run `python nova.py while_example.nova` for a three-iteration example.
+Run `python nova.py examples/while_example.nova` for a three-iteration example.

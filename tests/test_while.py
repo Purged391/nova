@@ -62,8 +62,8 @@ class WhileTests(unittest.TestCase):
                 parse(source(body))
 
     def test_cli(self):
-        root = Path(__file__).parent
-        result = subprocess.run([sys.executable, str(root / 'nova.py'), str(root / 'while_example.nova')],
+        root = Path(__file__).resolve().parents[1]
+        result = subprocess.run([sys.executable, str(root / 'nova.py'), str(root / 'examples' / 'while_example.nova')],
                                 capture_output=True, text=True, timeout=10)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout, 'Vuelta: 1\nVuelta: 2\nVuelta: 3\n')

@@ -8,7 +8,7 @@ import tempfile
 import unittest
 
 
-CLI = Path(__file__).with_name("nova.py")
+CLI = Path(__file__).resolve().parents[1] / "nova.py"
 
 
 class CLITests(unittest.TestCase):
