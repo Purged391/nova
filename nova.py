@@ -8,7 +8,8 @@ import sys
 
 from interpreter import NovaRuntimeError, run
 from lexer import LexerError
-from parser import ParseError
+from parser import ParseError, parse
+from semantic import SemanticError, analyze
 
 
 def _report_error(path: Path, source: str, error: Exception) -> None:
@@ -31,6 +32,8 @@ def main(argv: list[str] | None = None) -> int:
         description="Run a Nova file by calling its main function.",
     )
     argument_parser.add_argument("file", type=Path, help="Path to a UTF-8 Nova source file")
+    argument_parser.add_argument("--check", action="store_true",
+                                 help="Check syntax and semantics without executing the file")
     args = argument_parser.parse_args(argv)
     try:
         source = args.file.read_text(encoding="utf-8-sig")
@@ -38,8 +41,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{args.file}: File error: {error}", file=sys.stderr)
         return 1
     try:
+        if args.check:
+            analyze(parse(source))
+            print("Check passed")
+            return 0
         result = run(source)
-    except (LexerError, ParseError, NovaRuntimeError) as error:
+    except (LexerError, ParseError, SemanticError, NovaRuntimeError) as error:
         _report_error(args.file, source, error)
         return 1
     if result is not None:

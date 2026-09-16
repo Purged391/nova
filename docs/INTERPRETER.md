@@ -65,8 +65,10 @@ the language design develops. They are runtime checks, not a static type system.
 
 `NovaRuntimeError` provides `source_span`, `line`, and `column` when a source
 node exists. Host errors such as an unknown function have no source position.
-The loader rejects duplicate function/parameter names. Other checks occur
-when statements execute; unreachable code is not type-checked ahead of time.
+The public run(source) pipeline performs semantic analysis before execution.
+The low-level Interpreter(program) API executes an AST directly; callers using
+that API should call analyze(program) first when static validation is desired.
+Runtime safeguards remain active for host arguments and unknown static types.
 
 ## While loops
 
@@ -92,7 +94,8 @@ Run `python nova.py examples/while_example.nova` for a three-iteration example.
 `and`, `or`, and `not` require boolean operands and return booleans.
 `and` skips its right operand when the left is false; `or` skips it when
 the left is true. Skipped expressions have no runtime effects and are not
-runtime type-checked. They must still be syntactically valid.
+runtime type-checked. Semantic analysis still checks both operands for known
+name and type errors before execution.
 Unary `-` requires a number. `!=` requires matching types like `==`;
 `<=` and `>=` require numbers like `<` and `>`.
 

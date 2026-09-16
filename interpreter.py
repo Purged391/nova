@@ -8,6 +8,7 @@ from typing import TypeAlias
 
 import ast_nodes as ast
 from parser import parse
+from semantic import analyze
 
 
 Value: TypeAlias = int | float | str | bool
@@ -282,5 +283,7 @@ class Interpreter:
 
 
 def run(source: str, function: str = "main", *arguments: Value) -> Value | None:
-    """Parse source and execute one function through the complete pipeline."""
-    return Interpreter(parse(source)).call(function, *arguments)
+    """Parse, analyze, and execute one function through the complete pipeline."""
+    program = parse(source)
+    analyze(program)
+    return Interpreter(program).call(function, *arguments)

@@ -8,7 +8,8 @@ import sys
 import unittest
 
 import ast_nodes as ast
-from interpreter import NovaRuntimeError, run
+from interpreter import NovaRuntimeError
+from tests.runtime_support import run
 from lexer import Lexer, TokenKind as K
 from parser import parse, ParseError
 

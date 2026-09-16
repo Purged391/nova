@@ -39,3 +39,11 @@ column, and a source pointer when available. Returned values go to stdout.
 
 This first CLI does not install a global `nova` command or add editor syntax
 highlighting. It runs the currently implemented Nova language unchanged.
+
+## Static checking
+
+`python nova.py --check examples/calls.nova` parses and analyzes the entire
+file without executing any Nova code. On success it prints `Check passed`.
+It does not require `main`, so library-like files can also be checked.
+Normal execution always analyzes first. Semantic errors use exit code 1.
+A successful check is not a guarantee against runtime errors or nontermination.

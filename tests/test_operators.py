@@ -4,7 +4,8 @@ from io import StringIO
 import unittest
 
 import ast_nodes as ast
-from interpreter import run, NovaRuntimeError
+from interpreter import NovaRuntimeError
+from tests.runtime_support import run
 from lexer import Lexer, LexerError, TokenKind as K
 from parser import parse, ParseError
 

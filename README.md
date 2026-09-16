@@ -22,6 +22,7 @@ nova.py          Command-line entry point
 lexer.py         Source text to tokens
 parser.py        Tokens to AST
 ast_nodes.py     AST dataclasses
+semantic.py      Name, scope, and type analysis
 interpreter.py   AST execution
 examples/       Nova programs and Python demonstrations
 tests/          Automated tests
@@ -53,3 +54,13 @@ python -m examples.example_interpreter
 - [Parser grammar](docs/PARSER.md)
 - [Interpreter semantics](docs/INTERPRETER.md)
 - [AST schema](schemas/ast_nova.json)
+
+## Check without executing
+
+```shell
+python nova.py --check examples/calls.nova
+```
+
+Normal execution also runs semantic analysis before any Nova code executes.
+See the [core specification](docs/CORE_SPEC.md) and
+[semantic analyzer guide](docs/SEMANTIC.md) for rules and current limits.

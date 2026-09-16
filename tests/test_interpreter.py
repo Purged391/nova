@@ -3,7 +3,8 @@
 import unittest
 
 from examples.example_parser import SOURCE
-from interpreter import Interpreter, NovaRuntimeError, run
+from interpreter import Interpreter, NovaRuntimeError
+from tests.runtime_support import run
 from parser import parse
 
 
