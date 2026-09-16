@@ -36,10 +36,14 @@ return       = "return" expression NEWLINE
 loop         = "while" expression block
 conditional  = "if" expression block
                { "else" "if" expression block } [ "else" block ]
-expression   = comparison { "==" comparison }
-comparison   = addition { ( ">" | "<" ) addition }
+expression   = conjunction { "or" conjunction }
+conjunction  = inversion { "and" inversion }
+inversion    = "not" inversion | equality
+equality     = comparison { ( "==" | "!=" ) comparison }
+comparison   = addition { ( ">" | "<" | ">=" | "<=" ) addition }
 addition     = product { ( "+" | "-" ) product }
-product      = primary { ( "*" | "/" ) primary }
+product      = unary { ( "*" | "/" ) unary }
+unary        = "-" unary | primary
 call         = IDENTIFIER "(" [ expression { "," expression } ] ")"
 primary      = call | IDENTIFIER | NUMBER | TEXT | "true" | "false"
              | "(" expression ")"
@@ -51,8 +55,7 @@ not accepted. Blocks must contain at least one statement.
 
 Operators at each precedence level associate to the left. Comparisons are
 ordinary binary nodes, not Python-style chained comparisons. Parentheses are
-preserved as `GroupedExpr` nodes. Named calls use CallExpr; standalone calls use ExprStmt. Unary operators are not
-supported by the current AST. Return type declarations remain deferred.
+preserved as `GroupedExpr` nodes. Named calls use CallExpr; standalone calls use ExprStmt. Unary negation and boolean inversion use UnaryExpr. Return type declarations remain deferred.
 
 `ParseError` reports the first syntax error and exposes `line`, `column`, and
 `token`. Lexical errors still raise `LexerError`. Duplicate names, undefined

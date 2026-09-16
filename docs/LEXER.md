@@ -12,16 +12,16 @@ Columns count Unicode code points. Synthetic tokens have empty lexemes.
 
 ## Current lexical rules
 
-- Keywords: `func`, `inputs`, `run`, `let`, `if`, `while`, `break`, `continue`, `else`, `return`,
+- Keywords: `func`, `inputs`, `run`, `let`, `if`, `while`, `break`, `continue`, `and`, `or`, `not`, `else`, `return`,
   `number`, `text`, `bool`, `true`, and `false`. Names are case-sensitive.
 - Identifiers follow `[A-Za-z_][A-Za-z0-9_]*`, matching the AST schema.
 - Numbers are integers or decimals with digits on both sides of the decimal
   point. Exponent notation is not supported. Minus is a separate token;
-  unary expression support remains a parser/AST design decision.
+  the parser distinguishes subtraction from unary negation.
 - Strings use double quotes and support Unicode text and the escapes
   `\n`, `\r`, `\t`, `\"`, and `\\`. Physical multiline strings are not supported.
 - Comments start with `#` and continue to the end of the line.
-- Operators: `+`, `-`, `*`, `/`, `>`, `<`, `==`; assignment uses `=`.
+- Operators: `+`, `-`, `*`, `/`, `>`, `<`, `==`, `!=`, `<=`, `>=`, `and`, `or`, `not`; assignment uses `=`.
 - Punctuation: `(`, `)`, `:`, and `,`.
 - Indentation uses spaces. Any increased width starts a level; dedentation must
   match an earlier level. Four spaces per level is the recommended style.

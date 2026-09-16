@@ -107,7 +107,7 @@ class ParserTests(unittest.TestCase):
 
     def test_invalid_statements(self):
         for statement in ("return", "let x =", "let x: bool", "x + 1",
-                          "return 1 2", "return -1", "else:"):
+                          "return 1 2", "else:"):
             with self.subTest(statement=statement), self.assertRaises(ParseError):
                 parse("func f:\n    run:\n        " + statement)
 

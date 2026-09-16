@@ -11,7 +11,8 @@ from typing import Literal, TypeAlias
 
 
 TypeName: TypeAlias = Literal["number", "text", "bool"]
-BinaryOperator: TypeAlias = Literal["ADD", "SUB", "MUL", "DIV", "GT", "LT", "EQ"]
+BinaryOperator: TypeAlias = Literal["ADD", "SUB", "MUL", "DIV", "GT", "LT", "EQ", "NE", "LE", "GE", "AND", "OR"]
+UnaryOperator: TypeAlias = Literal["NEG", "NOT"]
 
 
 @dataclass
@@ -187,10 +188,19 @@ class ContinueStmt(NodeBase):
     type: Literal["ContinueStmt"] = field(default="ContinueStmt", init=False)
 
 
+@dataclass
+class UnaryExpr(NodeBase):
+    """Apply numeric negation or boolean inversion to one operand."""
+
+    operator: UnaryOperator
+    operand: Expr
+    type: Literal["UnaryExpr"] = field(default="UnaryExpr", init=False)
+
+
 Stmt: TypeAlias = BlockStmt | LetStmt | AssignStmt | IfStmt | ReturnStmt | ExprStmt | WhileStmt | BreakStmt | ContinueStmt
 Expr: TypeAlias = (
     IdentifierExpr | NumberLiteralExpr | TextLiteralExpr
-    | BoolLiteralExpr | BinaryExpr | GroupedExpr | CallExpr
+    | BoolLiteralExpr | BinaryExpr | GroupedExpr | CallExpr | UnaryExpr
 )
 
 

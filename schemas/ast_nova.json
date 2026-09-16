@@ -67,6 +67,9 @@
     },
     {
       "$ref": "#/$defs/ContinueStmt"
+    },
+    {
+      "$ref": "#/$defs/UnaryExpr"
     }
   ],
   "$defs": {
@@ -294,6 +297,9 @@
         },
         {
           "$ref": "#/$defs/CallExpr"
+        },
+        {
+          "$ref": "#/$defs/UnaryExpr"
         }
       ]
     },
@@ -631,7 +637,12 @@
                 "DIV",
                 "GT",
                 "LT",
-                "EQ"
+                "EQ",
+                "NE",
+                "LE",
+                "GE",
+                "AND",
+                "OR"
               ]
             },
             "right": {
@@ -805,6 +816,39 @@
           },
           "required": [
             "type"
+          ]
+        }
+      ]
+    },
+    "UnaryExpr": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "UnaryExpr"
+            },
+            "operator": {
+              "enum": [
+                "NEG",
+                "NOT"
+              ]
+            },
+            "operand": {
+              "$ref": "#/$defs/Expr"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "operator",
+            "operand"
           ]
         }
       ]

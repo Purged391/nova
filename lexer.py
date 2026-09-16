@@ -38,6 +38,12 @@ class TokenKind(Enum):
     LESS = auto()
     EQUAL = auto()
     EQUAL_EQUAL = auto()
+    NOT_EQUAL = auto()
+    LESS_EQUAL = auto()
+    GREATER_EQUAL = auto()
+    AND = auto()
+    OR = auto()
+    NOT = auto()
     LEFT_PAREN = auto()
     RIGHT_PAREN = auto()
     COLON = auto()
@@ -54,7 +60,13 @@ KEYWORDS = {
     "break": TokenKind.BREAK, "continue": TokenKind.CONTINUE, "else": TokenKind.ELSE,
     "return": TokenKind.RETURN, "number": TokenKind.NUMBER_TYPE,
     "text": TokenKind.TEXT_TYPE, "bool": TokenKind.BOOL_TYPE,
+    "and": TokenKind.AND, "or": TokenKind.OR, "not": TokenKind.NOT,
     "true": TokenKind.TRUE, "false": TokenKind.FALSE,
+}
+
+DOUBLE_SYMBOLS = {
+    "==": TokenKind.EQUAL_EQUAL, "!=": TokenKind.NOT_EQUAL,
+    "<=": TokenKind.LESS_EQUAL, ">=": TokenKind.GREATER_EQUAL,
 }
 
 SYMBOLS = {
@@ -185,10 +197,10 @@ class Lexer:
             elif char == '"':
                 kind = TokenKind.TEXT
                 value = self._text(line, column)
-            elif char == "=" and self._peek(1) == "=":
+            elif char + self._peek(1) in DOUBLE_SYMBOLS:
+                kind = DOUBLE_SYMBOLS[char + self._peek(1)]
                 self._advance()
                 self._advance()
-                kind = TokenKind.EQUAL_EQUAL
             elif char in SYMBOLS:
                 kind = SYMBOLS[char]
                 self._advance()

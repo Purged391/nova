@@ -1,0 +1,14 @@
+func check:
+    run:
+        print("This call is evaluated")
+        return true
+
+func main:
+    run:
+        let divisor = 0
+        print("Safe division:", divisor != 0 and 10 / divisor > 2)
+        print("Skipped call:", true or check())
+        print("Evaluated call:", false or check())
+        print("Negative:", -5)
+        print("Range:", 18 >= 18 and 18 <= 65)
+        print("Inversion:", not false)

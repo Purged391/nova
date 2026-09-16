@@ -223,18 +223,40 @@ class Interpreter:
             return environment.resolve(node.name, node).value
         if isinstance(node, ast.GroupedExpr):
             return self._evaluate(node.expression, environment)
+        if isinstance(node, ast.UnaryExpr):
+            value = self._evaluate(node.operand, environment)
+            if node.operator == "NOT":
+                _check_type(value, "bool", node.operand)
+                return not value
+            if node.operator == "NEG":
+                _check_type(value, "number", node.operand)
+                return -value
+            raise NovaRuntimeError(f"Unsupported unary operator: {node.operator}", node)
         if isinstance(node, ast.BinaryExpr):
             left = self._evaluate(node.left, environment)
+            if node.operator in ("AND", "OR"):
+                _check_type(left, "bool", node.left)
+                if node.operator == "AND" and not left:
+                    return False
+                if node.operator == "OR" and left:
+                    return True
+                right = self._evaluate(node.right, environment)
+                _check_type(right, "bool", node.right)
+                return right
             right = self._evaluate(node.right, environment)
             left_type, right_type = _type_of(left, node), _type_of(right, node)
-            if node.operator == "EQ":
+            if node.operator in ("EQ", "NE"):
                 if left_type != right_type:
                     raise NovaRuntimeError("Equality requires operands of the same type", node)
-                return left == right
+                return left == right if node.operator == "EQ" else left != right
             if node.operator == "ADD" and left_type == right_type == "text":
                 return left + right
             if left_type != "number" or right_type != "number":
                 raise NovaRuntimeError(f"Operator {node.operator} requires number operands", node)
+            if node.operator == "GE":
+                return left >= right
+            if node.operator == "LE":
+                return left <= right
             if node.operator == "GT":
                 return left > right
             if node.operator == "LT":

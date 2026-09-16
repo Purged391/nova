@@ -86,3 +86,20 @@ Update counters before `continue` when the loop depends on them. Run
 `python nova.py examples/loop_control.nova` for an example.
 
 Run `python nova.py examples/while_example.nova` for a three-iteration example.
+
+## Logical and unary operators
+
+`and`, `or`, and `not` require boolean operands and return booleans.
+`and` skips its right operand when the left is false; `or` skips it when
+the left is true. Skipped expressions have no runtime effects and are not
+runtime type-checked. They must still be syntactically valid.
+Unary `-` requires a number. `!=` requires matching types like `==`;
+`<=` and `>=` require numbers like `<` and `>`.
+
+Precedence from weakest to strongest: `or`, `and`, `not`, equality,
+ordering comparisons, addition/subtraction, multiplication/division,
+unary minus, calls and primary expressions. Thus `not x == y` means
+`not (x == y)`. Parentheses can override precedence. Comparisons remain
+ordinary binary operations, not Python-style comparison chains.
+
+Run `python nova.py examples/operators.nova` to demonstrate short-circuiting.

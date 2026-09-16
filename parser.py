@@ -177,17 +177,34 @@ class Parser:
                           source_span=_span(start, last))
 
     def parse_expression(self) -> ast.Expr:
-        """Parse precedence levels from weakest (equality) to strongest."""
-        return self._binary(self._comparison, {K.EQUAL_EQUAL: "EQ"})
+        """Parse logical operators, comparisons, arithmetic, and unary operators."""
+        return self._binary(self._and, {K.OR: "OR"})
+
+    def _and(self) -> ast.Expr:
+        return self._binary(self._not, {K.AND: "AND"})
+
+    def _not(self) -> ast.Expr:
+        if self.current.kind == K.NOT:
+            start = self._advance()
+            operand = self._not()
+            return ast.UnaryExpr(operator="NOT", operand=operand, source_span=_span(start, operand))
+        return self._binary(self._comparison, {K.EQUAL_EQUAL: "EQ", K.NOT_EQUAL: "NE"})
 
     def _comparison(self) -> ast.Expr:
-        return self._binary(self._addition, {K.GREATER: "GT", K.LESS: "LT"})
+        return self._binary(self._addition, {K.GREATER: "GT", K.LESS: "LT", K.GREATER_EQUAL: "GE", K.LESS_EQUAL: "LE"})
 
     def _addition(self) -> ast.Expr:
         return self._binary(self._multiplication, {K.PLUS: "ADD", K.MINUS: "SUB"})
 
     def _multiplication(self) -> ast.Expr:
-        return self._binary(self._primary, {K.STAR: "MUL", K.SLASH: "DIV"})
+        return self._binary(self._unary, {K.STAR: "MUL", K.SLASH: "DIV"})
+
+    def _unary(self) -> ast.Expr:
+        if self.current.kind == K.MINUS:
+            start = self._advance()
+            operand = self._unary()
+            return ast.UnaryExpr(operator="NEG", operand=operand, source_span=_span(start, operand))
+        return self._primary()
 
     def _binary(self, operand_parser, operators) -> ast.Expr:
         """Build left-associative trees within one precedence level."""
