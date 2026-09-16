@@ -77,6 +77,21 @@ class _ReturnSignal(Exception):
         self.value = value
 
 
+class _LoopSignal(Exception):
+    """Internal loop control, caught by a loop or stopped at a function boundary."""
+
+    def __init__(self, node: ast.NodeBase):
+        self.node = node
+
+
+class _BreakSignal(_LoopSignal):
+    pass
+
+
+class _ContinueSignal(_LoopSignal):
+    pass
+
+
 class Interpreter:
     """Execute named functions from Python or Nova call expressions."""
 
@@ -125,6 +140,9 @@ class Interpreter:
                 self._execute_block(function.run_block, environment)
             except _ReturnSignal as signal:
                 return signal.value
+            except _LoopSignal as signal:
+                raise NovaRuntimeError("Loop control cannot leave a function or run outside a loop",
+                                       signal.node) from None
             except RecursionError as error:
                 raise NovaRuntimeError("Interpreter recursion limit exceeded", call_node or function) from error
             return None
@@ -147,6 +165,10 @@ class Interpreter:
             value = self._evaluate(node.value, environment)
             _check_type(value, binding.type_name, node)
             binding.value = value
+        elif isinstance(node, ast.BreakStmt):
+            raise _BreakSignal(node)
+        elif isinstance(node, ast.ContinueStmt):
+            raise _ContinueSignal(node)
         elif isinstance(node, ast.ReturnStmt):
             raise _ReturnSignal(self._evaluate(node.value, environment))
         elif isinstance(node, ast.BlockStmt):
@@ -157,7 +179,12 @@ class Interpreter:
                 _check_type(value, "bool", node.condition)
                 if not value:
                     break
-                self._execute_block(node.block, _Environment(environment))
+                try:
+                    self._execute_block(node.block, _Environment(environment))
+                except _ContinueSignal:
+                    continue
+                except _BreakSignal:
+                    break
         elif isinstance(node, ast.IfStmt):
             branches = [(node.condition, node.then_block)]
             branches.extend((clause.condition, clause.block) for clause in node.else_if_clauses)

@@ -29,6 +29,7 @@ parameter    = IDENTIFIER ":" type
 type         = "number" | "text" | "bool"
 block        = ":" NEWLINE INDENT statement { statement } DEDENT
 statement    = let | assignment | return | conditional | loop | call NEWLINE
+               | "break" NEWLINE | "continue" NEWLINE
 let          = "let" IDENTIFIER [ ":" type ] "=" expression NEWLINE
 assignment   = IDENTIFIER "=" expression NEWLINE
 return       = "return" expression NEWLINE
@@ -57,3 +58,7 @@ supported by the current AST. Return type declarations remain deferred.
 `token`. Lexical errors still raise `LexerError`. Duplicate names, undefined
 variables, operand types, and return-path checks belong to future semantic
 analysis; successfully parsing a program does not guarantee it can execute.
+
+`break` and `continue` are only valid inside a loop in the same function.
+The parser checks this even in unreachable branches. Neither accepts a value
+or a label. They produce BreakStmt and ContinueStmt nodes respectively.

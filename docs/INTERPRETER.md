@@ -77,6 +77,12 @@ persist between iterations, while assignments can update outer variables.
 `return` inside a loop exits the entire function. Loops can be nested and
 their conditions may call functions. There is no iteration limit; the body
 must eventually make the condition false unless the function returns.
-`break`, `continue`, and `while ... else` are not supported yet.
+`break` exits the nearest loop; `continue` rechecks that loop's condition and
+starts a fresh iteration scope. Both can appear inside nested conditionals.
+They never exit a caller's loop across a function call. `return` still exits
+the entire function. `while ... else` is not supported.
+
+Update counters before `continue` when the loop depends on them. Run
+`python nova.py examples/loop_control.nova` for an example.
 
 Run `python nova.py examples/while_example.nova` for a three-iteration example.

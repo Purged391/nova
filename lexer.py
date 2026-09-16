@@ -18,6 +18,8 @@ class TokenKind(Enum):
     LET = auto()
     IF = auto()
     WHILE = auto()
+    BREAK = auto()
+    CONTINUE = auto()
     ELSE = auto()
     RETURN = auto()
     NUMBER_TYPE = auto()
@@ -48,7 +50,8 @@ class TokenKind(Enum):
 
 KEYWORDS = {
     "func": TokenKind.FUNC, "inputs": TokenKind.INPUTS, "run": TokenKind.RUN,
-    "let": TokenKind.LET, "if": TokenKind.IF, "while": TokenKind.WHILE, "else": TokenKind.ELSE,
+    "let": TokenKind.LET, "if": TokenKind.IF, "while": TokenKind.WHILE,
+    "break": TokenKind.BREAK, "continue": TokenKind.CONTINUE, "else": TokenKind.ELSE,
     "return": TokenKind.RETURN, "number": TokenKind.NUMBER_TYPE,
     "text": TokenKind.TEXT_TYPE, "bool": TokenKind.BOOL_TYPE,
     "true": TokenKind.TRUE, "false": TokenKind.FALSE,

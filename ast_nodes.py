@@ -173,7 +173,21 @@ class WhileStmt(NodeBase):
     type: Literal["WhileStmt"] = field(default="WhileStmt", init=False)
 
 
-Stmt: TypeAlias = BlockStmt | LetStmt | AssignStmt | IfStmt | ReturnStmt | ExprStmt | WhileStmt
+@dataclass
+class BreakStmt(NodeBase):
+    """Exit the nearest enclosing loop."""
+
+    type: Literal["BreakStmt"] = field(default="BreakStmt", init=False)
+
+
+@dataclass
+class ContinueStmt(NodeBase):
+    """Start the next iteration of the nearest enclosing loop."""
+
+    type: Literal["ContinueStmt"] = field(default="ContinueStmt", init=False)
+
+
+Stmt: TypeAlias = BlockStmt | LetStmt | AssignStmt | IfStmt | ReturnStmt | ExprStmt | WhileStmt | BreakStmt | ContinueStmt
 Expr: TypeAlias = (
     IdentifierExpr | NumberLiteralExpr | TextLiteralExpr
     | BoolLiteralExpr | BinaryExpr | GroupedExpr | CallExpr

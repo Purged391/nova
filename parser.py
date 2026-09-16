@@ -34,6 +34,7 @@ class Parser:
             raise ValueError("EOF must only appear at the end of the token stream")
         self.tokens = tokens
         self.index = 0
+        self._loop_depth = 0
 
     @property
     def current(self) -> Token:
@@ -59,6 +60,7 @@ class Parser:
     def parse(self) -> ast.Program:
         """Parse an entire file; an empty file is a valid empty program."""
         self.index = 0
+        self._loop_depth = 0
         start = self.current
         functions = []
         while self.current.kind != K.EOF:
@@ -67,6 +69,7 @@ class Parser:
                            source_span=_span(start, functions[-1] if functions else start))
 
     def parse_function(self) -> ast.FuncDecl:
+        self._loop_depth = 0
         start = self._expect(K.FUNC, "Expected 'func'")
         name = self._expect(K.IDENTIFIER, "Expected a function name")
         self._expect(K.COLON, "Expected ':' after function name")
@@ -123,9 +126,19 @@ class Parser:
             result = ast.ReturnStmt(value=value, source_span=_span(start, value))
         elif self._match(K.WHILE):
             condition = self.parse_expression()
-            block = self._parse_block()
+            self._loop_depth += 1
+            try:
+                block = self._parse_block()
+            finally:
+                self._loop_depth -= 1
             return ast.WhileStmt(condition=condition, block=block,
                                  source_span=_span(start, block))
+        elif self.current.kind in (K.BREAK, K.CONTINUE):
+            if self._loop_depth == 0:
+                raise ParseError(f"'{start.lexeme}' is only allowed inside a loop", start)
+            self._advance()
+            node_class = ast.BreakStmt if start.kind == K.BREAK else ast.ContinueStmt
+            result = node_class(source_span=start.source_span)
         elif self.current.kind == K.IF:
             return self._parse_if()
         elif self.current.kind == K.IDENTIFIER and self.tokens[self.index + 1].kind == K.LEFT_PAREN:
@@ -137,7 +150,7 @@ class Parser:
             value = self.parse_expression()
             result = ast.AssignStmt(target=target, value=value, source_span=_span(start, value))
         else:
-            raise ParseError("Expected let, assignment, call, if, while, or return", start)
+            raise ParseError("Expected let, assignment, call, if, while, break, continue, or return", start)
         self._expect(K.NEWLINE, "Expected a newline after statement")
         return result
 

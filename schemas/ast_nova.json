@@ -61,6 +61,12 @@
     },
     {
       "$ref": "#/$defs/WhileStmt"
+    },
+    {
+      "$ref": "#/$defs/BreakStmt"
+    },
+    {
+      "$ref": "#/$defs/ContinueStmt"
     }
   ],
   "$defs": {
@@ -257,6 +263,12 @@
         },
         {
           "$ref": "#/$defs/WhileStmt"
+        },
+        {
+          "$ref": "#/$defs/BreakStmt"
+        },
+        {
+          "$ref": "#/$defs/ContinueStmt"
         }
       ]
     },
@@ -749,6 +761,50 @@
             "type",
             "condition",
             "block"
+          ]
+        }
+      ]
+    },
+    "BreakStmt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "BreakStmt"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        }
+      ]
+    },
+    "ContinueStmt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "ContinueStmt"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type"
           ]
         }
       ]

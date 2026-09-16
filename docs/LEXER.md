@@ -12,7 +12,7 @@ Columns count Unicode code points. Synthetic tokens have empty lexemes.
 
 ## Current lexical rules
 
-- Keywords: `func`, `inputs`, `run`, `let`, `if`, `while`, `else`, `return`,
+- Keywords: `func`, `inputs`, `run`, `let`, `if`, `while`, `break`, `continue`, `else`, `return`,
   `number`, `text`, `bool`, `true`, and `false`. Names are case-sensitive.
 - Identifiers follow `[A-Za-z_][A-Za-z0-9_]*`, matching the AST schema.
 - Numbers are integers or decimals with digits on both sides of the decimal
