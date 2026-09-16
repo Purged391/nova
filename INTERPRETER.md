@@ -52,7 +52,7 @@ the language design develops. They are runtime checks, not a static type system.
   This does not introduce a `null` literal or a new type into Nova.
 - Functions can be called from Python or Nova, including forward references and
   recursion. Named calls resolve in the function namespace, independently of variables.
-  Loops and async/concurrent execution remain future work.
+  Async/concurrent execution remains future work.
 - Built-in `print(...)` accepts zero or more values, separates them with spaces,
   and ends with a newline. Booleans display as `true`/`false`. It has no return
   value, and its function name cannot be redefined.
@@ -67,3 +67,16 @@ the language design develops. They are runtime checks, not a static type system.
 node exists. Host errors such as an unknown function have no source position.
 The loader rejects duplicate function/parameter names. Other checks occur
 when statements execute; unreachable code is not type-checked ahead of time.
+
+## While loops
+
+`while condition:` evaluates its condition before every iteration, including
+the first. The condition must be bool. A false condition skips the body.
+Each iteration has a fresh child scope: local declarations do not leak or
+persist between iterations, while assignments can update outer variables.
+`return` inside a loop exits the entire function. Loops can be nested and
+their conditions may call functions. There is no iteration limit; the body
+must eventually make the condition false unless the function returns.
+`break`, `continue`, and `while ... else` are not supported yet.
+
+Run `python nova.py while_example.nova` for a three-iteration example.

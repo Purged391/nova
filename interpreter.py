@@ -151,6 +151,13 @@ class Interpreter:
             raise _ReturnSignal(self._evaluate(node.value, environment))
         elif isinstance(node, ast.BlockStmt):
             self._execute_block(node, _Environment(environment))
+        elif isinstance(node, ast.WhileStmt):
+            while True:
+                value = self._evaluate(node.condition, environment)
+                _check_type(value, "bool", node.condition)
+                if not value:
+                    break
+                self._execute_block(node.block, _Environment(environment))
         elif isinstance(node, ast.IfStmt):
             branches = [(node.condition, node.then_block)]
             branches.extend((clause.condition, clause.block) for clause in node.else_if_clauses)

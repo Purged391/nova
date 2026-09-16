@@ -164,7 +164,16 @@ class ExprStmt(NodeBase):
     type: Literal["ExprStmt"] = field(default="ExprStmt", init=False)
 
 
-Stmt: TypeAlias = BlockStmt | LetStmt | AssignStmt | IfStmt | ReturnStmt | ExprStmt
+@dataclass
+class WhileStmt(NodeBase):
+    """Repeat a block while its condition evaluates to true."""
+
+    condition: Expr
+    block: BlockStmt
+    type: Literal["WhileStmt"] = field(default="WhileStmt", init=False)
+
+
+Stmt: TypeAlias = BlockStmt | LetStmt | AssignStmt | IfStmt | ReturnStmt | ExprStmt | WhileStmt
 Expr: TypeAlias = (
     IdentifierExpr | NumberLiteralExpr | TextLiteralExpr
     | BoolLiteralExpr | BinaryExpr | GroupedExpr | CallExpr

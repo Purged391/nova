@@ -58,6 +58,9 @@
     },
     {
       "$ref": "#/$defs/ExprStmt"
+    },
+    {
+      "$ref": "#/$defs/WhileStmt"
     }
   ],
   "$defs": {
@@ -251,6 +254,9 @@
         },
         {
           "$ref": "#/$defs/ExprStmt"
+        },
+        {
+          "$ref": "#/$defs/WhileStmt"
         }
       ]
     },
@@ -713,6 +719,36 @@
           "required": [
             "type",
             "expression"
+          ]
+        }
+      ]
+    },
+    "WhileStmt": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NodeBase"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "WhileStmt"
+            },
+            "condition": {
+              "$ref": "#/$defs/Expr"
+            },
+            "block": {
+              "$ref": "#/$defs/BlockStmt"
+            },
+            "source_span": {
+              "$ref": "#/$defs/SourceSpan"
+            }
+          },
+          "required": [
+            "type",
+            "condition",
+            "block"
           ]
         }
       ]

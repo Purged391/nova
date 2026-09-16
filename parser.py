@@ -121,6 +121,11 @@ class Parser:
         elif self._match(K.RETURN):
             value = self.parse_expression()
             result = ast.ReturnStmt(value=value, source_span=_span(start, value))
+        elif self._match(K.WHILE):
+            condition = self.parse_expression()
+            block = self._parse_block()
+            return ast.WhileStmt(condition=condition, block=block,
+                                 source_span=_span(start, block))
         elif self.current.kind == K.IF:
             return self._parse_if()
         elif self.current.kind == K.IDENTIFIER and self.tokens[self.index + 1].kind == K.LEFT_PAREN:
@@ -132,7 +137,7 @@ class Parser:
             value = self.parse_expression()
             result = ast.AssignStmt(target=target, value=value, source_span=_span(start, value))
         else:
-            raise ParseError("Expected let, assignment, call, if, or return", start)
+            raise ParseError("Expected let, assignment, call, if, while, or return", start)
         self._expect(K.NEWLINE, "Expected a newline after statement")
         return result
 

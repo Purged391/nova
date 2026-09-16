@@ -1,0 +1,6 @@
+func main:
+    run:
+        let count = 1
+        while count < 4:
+            print("Vuelta:", count)
+            count = count + 1

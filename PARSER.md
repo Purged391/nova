@@ -28,10 +28,11 @@ function     = "func" IDENTIFIER ":" NEWLINE INDENT
 parameter    = IDENTIFIER ":" type
 type         = "number" | "text" | "bool"
 block        = ":" NEWLINE INDENT statement { statement } DEDENT
-statement    = let | assignment | return | conditional | call NEWLINE
+statement    = let | assignment | return | conditional | loop | call NEWLINE
 let          = "let" IDENTIFIER [ ":" type ] "=" expression NEWLINE
 assignment   = IDENTIFIER "=" expression NEWLINE
 return       = "return" expression NEWLINE
+loop         = "while" expression block
 conditional  = "if" expression block
                { "else" "if" expression block } [ "else" block ]
 expression   = comparison { "==" comparison }
